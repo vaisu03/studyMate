@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Planner - Schedule</title>
+
+  <!-- FullCalendar CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<style>
+/* ===== Basic Reset ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
+/* ===== Body with Gradient + Background Elements ===== */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Subtle Floating Circles ===== */
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px; height: 200px;
+  background: #2563eb;
+  top: 10%; left: 5%;
+  animation-duration: 18s;
+}
+.circle:nth-child(2) {
+  width: 150px; height: 150px;
+  background: #facc15;
+  bottom: 20%; right: 10%;
+  animation-duration: 20s;
+}
+.circle:nth-child(3) {
+  width: 250px; height: 250px;
+  background: #ef4444;
+  top: 50%; left: 40%;
+  animation-duration: 22s;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  margin: 10px;
+}
+.navbar h2 { font-size: 1.5rem; color: #ffffff; }
+.navbar ul { display: flex; gap: 15px; list-style: none; }
+.navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px; }
+.navbar ul li a.active { background: #2563eb; }
+#toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+/* ===== Schedule Section ===== */
+.schedule { max-width: 900px; margin: 20px auto; padding: 20px; }
+.schedule h2 { margin-bottom: 15px; color: #facc15; }
+
+#calendar {
+  background: rgba(17, 24, 39, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.fc .fc-toolbar-title { color: #facc15; font-weight: bold; }
+.fc .fc-button { background-color: #2563eb; color: #fff; border: none; border-radius: 5px; }
+.fc .fc-button:hover { background-color: #1d4ed8; }
+.fc .fc-daygrid-event { border-radius: 5px; color: #fff; font-size: 0.85rem; padding: 3px 5px; 
+/* ===== Basic Reset ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
+/* ===== Body with Gradient + Background Elements ===== */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Subtle Floating Circles ===== */
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px; height: 200px;
+  background: #2563eb;
+  top: 10%; left: 5%;
+  animation-duration: 18s;
+}
+.circle:nth-child(2) {
+  width: 150px; height: 150px;
+  background: #facc15;
+  bottom: 20%; right: 10%;
+  animation-duration: 20s;
+}
+.circle:nth-child(3) {
+  width: 250px; height: 250px;
+  background: #ef4444;
+  top: 50%; left: 40%;
+  animation-duration: 22s;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  margin: 10px;
+}
+.navbar h2 { font-size: 1.5rem; color: #ffffff; }
+.navbar ul { display: flex; gap: 15px; list-style: none; }
+.navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px; }
+.navbar ul li a.active { background: #2563eb; }
+#toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+/* ===== Schedule Section ===== */
+.schedule { max-width: 900px; margin: 20px auto; padding: 20px; }
+.schedule h2 { margin-bottom: 15px; color: #facc15; }
+
+#calendar {
+  background: rgba(17, 24, 39, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.fc .fc-toolbar-title { color: #facc15; font-weight: bold; }
+.fc .fc-button { background-color: #2563eb; color: #fff; border: none; border-radius: 5px; }
+.fc .fc-button:hover { background-color: #1d4ed8; }
+.fc .fc-daygrid-event { border-radius: 5px; color: #fff; font-size: 0.85rem; padding: 3px 5px; }}
+</style>
+
+</head>
+<body>
+  <div class="background-elements">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+
+  <!-- ===== Navbar ===== -->
+  <nav class="navbar">
+    <h2>📚 StudyMate</h2>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="tasks.html">Tasks</a></li>
+      <li><a href="schedule.html" class="active">Schedule</a></li>
+      <li><a href="pomodoro.html">Pomodoro</a></li>
+      <li><a href="progress.html">Progress</a></li>
+    </ul>
+    <button id="toggleTheme">🌙</button>
+      <button id="logoutBtn" style="
+      background:#ef4444; 
+      color:#fff; 
+      border:none; 
+      padding:5px 10px; 
+      border-radius:5px; 
+      cursor:pointer;">
+      🚪 Logout
+    </button>
+  </nav>
+
+  <!-- ===== Schedule Section ===== -->
+  <section class="schedule">
+    <h2>📖 Study Schedule</h2>
+    <div id="calendar"></div>
+  </section>
+
+<script>
+const currentUserEmail = localStorage.getItem("currentUser");
+if(!currentUserEmail){
+  alert("No user logged in! Redirecting to login page.");
+  window.location.href = "login.html";
+}
+
+let users = JSON.parse(localStorage.getItem("users")) || [];
+let currentUser = users.find(u => u.email === currentUserEmail);
+if(!currentUser.tasks) currentUser.tasks = [];
+
+let schedules = currentUser.tasks.map(t => ({
+  id: Date.now() + Math.random(),
+  task: t.name,
+  date: t.date || new Date().toISOString().split("T")[0],
+  priority: t.priority || "low",
+  completed: t.completed || false
+}));
+
+function renderCalendar() {
+  const calendarEl = document.getElementById("calendar");
+  calendarEl.innerHTML = "";
+
+  const events = schedules.map(s => ({
+    id: s.id,
+    title: s.task,
+    start: s.date,
+    color: s.completed ? "#4CAF50" : (s.priority === "high" ? "#f44336" : (s.priority === "medium" ? "#fbbf24" : "#3b82f6"))
+  }));
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: "dayGridMonth",
+    height: "auto",
+    events: events,
+    eventClick: function(info){
+      const sched = schedules.find(s => s.id == info.event.id);
+      const markDone = confirm(`📌 Task: ${sched.task}\n📅 Date: ${sched.date}\n\nMark as completed?`);
+      if(markDone){
+        sched.completed = true;
+        updateSchedules();
+      }
+    }
+  });
+
+  calendar.render();
+}
+
+// Save schedules back to current user tasks
+function updateSchedules(){
+  currentUser.tasks.forEach((t,i) => {
+    const sched = schedules[i];
+    if(sched) t.completed = sched.completed;
+  });
+  users = users.map(u => u.email === currentUser.email ? currentUser : u);
+  localStorage.setItem("users", JSON.stringify(users));
+  renderCalendar();
+  notifyUser();
+}
+
+// ===== Notifications =====
+function notifyUser(){
+  if(Notification.permission === "granted"){
+    schedules.forEach(s => {
+      if(!s.completed && s.date === new Date().toISOString().split("T")[0]){
+        new Notification(`Reminder: ${s.task}`, { body: `Priority: ${s.priority}`, icon: "https://cdn-icons-png.flaticon.com/512/929/929416.png" });
+      }
+    });
+  } else {
+    Notification.requestPermission();
+  }
+}
+
+// ===== Theme Toggle =====
+document.getElementById('toggleTheme').addEventListener('click', () => {
+  if(document.body.style.background === 'white'){
+    document.body.style.background = '#1f2937';
+    document.body.style.color = '#fff';
+  } else {
+    document.body.style.background = 'white';
+    document.body.style.color = '#111';
+  }
+});
+// Logout function
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+  alert("You have been logged out!");
+  // Redirect to login page (replace with your login.html)
+  window.location.href = "login.html";
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderCalendar();
+  notifyUser();
+});
+</script>
+</body>
+</html>

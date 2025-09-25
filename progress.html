@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Study Planner - Progress</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  * { box-sizing: border-box; margin:0; padding:0; font-family: Arial, sans-serif; }
+  body { background: #1f2937; color: #fff; min-height:100vh; }
+
+  /* Navbar */
+  .navbar { background:#111827; padding:10px 20px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; }
+  .navbar h2 { font-size:1.5rem; color:#ffffff; }
+  .navbar ul { display:flex; gap:15px; list-style:none; }
+  .navbar ul li a { color:#fff; text-decoration:none; padding:5px 10px; border-radius:5px; }
+  .navbar ul li a.active { background:#2563eb; }
+  #toggleTheme { background:none; border:none; color:#fff; font-size:1.2rem; cursor:pointer; }
+
+  /* Progress Section */
+  .progress-section { max-width:1000px; margin:20px auto; padding:20px; text-align:center; }
+  .progress-section h2 { margin-bottom:20px; color:#facc15; }
+  canvas { background:#111827; border-radius:10px; padding:15px; }
+/* ===== Basic Reset ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
+/* ===== Body with Gradient + Background Elements ===== */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Subtle Floating Circles ===== */
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px; height: 200px;
+  background: #2563eb;
+  top: 10%; left: 5%;
+  animation-duration: 18s;
+}
+.circle:nth-child(2) {
+  width: 150px; height: 150px;
+  background: #facc15;
+  bottom: 20%; right: 10%;
+  animation-duration: 20s;
+}
+.circle:nth-child(3) {
+  width: 250px; height: 250px;
+  background: #ef4444;
+  top: 50%; left: 40%;
+  animation-duration: 22s;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  margin: 10px;
+}
+.navbar h2 { font-size: 1.5rem; color: #ffffff; }
+.navbar ul { display: flex; gap: 15px; list-style: none; }
+.navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px; }
+.navbar ul li a.active { background: #2563eb; }
+#toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+/* ===== Schedule Section ===== */
+.schedule { max-width: 900px; margin: 20px auto; padding: 20px; }
+.schedule h2 { margin-bottom: 15px; color: #facc15; }
+
+#calendar {
+  background: rgba(17, 24, 39, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.fc .fc-toolbar-title { color: #facc15; font-weight: bold; }
+.fc .fc-button { background-color: #2563eb; color: #fff; border: none; border-radius: 5px; }
+.fc .fc-button:hover { background-color: #1d4ed8; }
+.fc .fc-daygrid-event { border-radius: 5px; color: #fff; font-size: 0.85rem; padding: 3px 5px; }
+</style>
+</head>
+<body>
+  <div class="background-elements">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+<!-- Navbar -->
+<nav class="navbar">
+  <h2>📚 StudyMate</h2>
+  <ul>
+    <li><a href="dashboard.html">Dashboard</a></li>
+    <li><a href="tasks.html">Tasks</a></li>
+    <li><a href="schedule.html">Schedule</a></li>
+    <li><a href="pomodoro.html">Pomodoro</a></li>
+    <li><a href="progress.html" class="active">Progress</a></li>
+  </ul>
+  <button id="toggleTheme">🌙</button>
+    <button id="logoutBtn" style="
+      background:#ef4444; 
+      color:#fff; 
+      border:none; 
+      padding:5px 10px; 
+      border-radius:5px; 
+      cursor:pointer;">
+      🚪 Logout
+    </button>
+</nav>
+
+<!-- Progress Section -->
+<section class="progress-section">
+  <h2>📊 Your Daily Progress Overview</h2>
+  <canvas id="studyChart" width="900" height="400"></canvas>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+/* ===== Load stored data ===== */
+let tasks = JSON.parse(localStorage.getItem('ssp_tasks')) || [];
+let pomodoro = JSON.parse(localStorage.getItem('pomodoro_sessions')) || {};
+let siteTime = JSON.parse(localStorage.getItem('ssp_site_time')) || {};
+let studyData = {};
+
+/* ===== Track time spent on website ===== */
+const today = new Date().toISOString().split('T')[0];
+if(!siteTime[today]) siteTime[today] = 0; // in minutes
+let startTime = Date.now();
+window.addEventListener("beforeunload", () => {
+  const endTime = Date.now();
+  const minutes = Math.round((endTime - startTime)/60000);
+  siteTime[today] = (siteTime[today] || 0) + minutes;
+  localStorage.setItem('ssp_site_time', JSON.stringify(siteTime));
+});
+
+/* ===== Calculate progress automatically ===== */
+function calculateProgress() {
+  studyData = {};
+
+  // Tasks completed (assume 30 min per task)
+  tasks.forEach(task => {
+    if(task.completedDate){
+      const date = task.completedDate.split('T')[0];
+      studyData[date] = studyData[date] || { tasks:0, pomodoro:0, siteTime:0 };
+      studyData[date].tasks += 1;
+    }
+  });
+
+  // Pomodoro sessions (0.5 hr per session)
+  for(const date in pomodoro){
+    studyData[date] = studyData[date] || { tasks:0, pomodoro:0, siteTime:0 };
+    studyData[date].pomodoro += pomodoro[date]*0.5;
+  }
+
+  // Site time
+  for(const date in siteTime){
+    studyData[date] = studyData[date] || { tasks:0, pomodoro:0, siteTime:0 };
+    studyData[date].siteTime += siteTime[date]*0.5; // convert mins to hours roughly
+  }
+
+  // Save merged data
+  localStorage.setItem('study_hours', JSON.stringify(studyData));
+}
+
+calculateProgress();
+
+/* ===== Prepare chart data ===== */
+const labels = Object.keys(studyData).sort();
+const tasksCompleted = labels.map(d => studyData[d].tasks);
+const pomodoroHours = labels.map(d => studyData[d].pomodoro);
+const siteHours = labels.map(d => studyData[d].siteTime);
+
+/* ===== Chart Setup ===== */
+const ctx = document.getElementById('studyChart').getContext('2d');
+const chart = new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: labels,
+    datasets: [
+      { label: 'Tasks Completed', data: tasksCompleted, backgroundColor:'#2563eb' },
+      { label: 'Pomodoro Hours', data: pomodoroHours, backgroundColor:'#f59e0b' },
+      { label: 'Time on Website (ms)', data: siteHours, backgroundColor:'#10b981' }
+    ]
+  },
+  options: {
+    responsive:true,
+    plugins:{
+      legend:{ labels:{ color:"#fff", font:{size:14} } },
+      tooltip:{ mode:'index', intersect:false }
+    },
+    scales:{
+      x:{ ticks:{ color:"#fff" } },
+      y:{ beginAtZero:true, ticks:{ stepSize:1, color:"#fff" } }
+    }
+  }
+});
+
+/* ===== Theme toggle ===== */
+function toggleTheme(){
+  if(document.body.style.background==="white"){
+    document.body.style.background="#1f2937";
+    document.body.style.color="#fff";
+  } else{
+    document.body.style.background="white";
+    document.body.style.color="#111";
+  }
+}
+document.getElementById("toggleTheme").addEventListener("click", toggleTheme);
+
+// Logout function
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+  alert("You have been logged out!");
+  // Redirect to login page (replace with your login.html)
+  window.location.href = "login.html";
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Study Planner - Tasks</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ===== Basic Reset ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #1f2937; color: #fff; min-height: 100vh; }
+
+    /* ===== Navbar ===== */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #111827; }
+    .navbar h2 { font-size: 1.5rem; }
+    .navbar ul { list-style: none; display: flex; gap: 15px; }
+    .navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; }
+    .navbar ul li a.active { background: #2563eb; border-radius: 5px; }
+    #toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+    /* ===== Task Page ===== */
+    .task-page { max-width: 900px; margin: 20px auto; padding: 10px; }
+    .task-page h2 { margin-bottom: 15px; color: #facc15; }
+
+    .task-form { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .task-form input, .task-form select, .task-form button { padding: 8px; border-radius: 5px; border: none; }
+    .task-form input, .task-form select { flex: 1; min-width: 150px; }
+    .task-form button { background: #2563eb; color: #fff; cursor: pointer; }
+
+    .task-filters { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px; }
+    .task-filters input, .task-filters select { padding: 8px; border-radius: 5px; border: none; flex: 1; min-width: 120px; }
+
+    .task-list { display: flex; flex-direction: column; gap: 10px; }
+    .task-item { background: #111827; padding: 10px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 0 5px rgba(0,0,0,0.5); }
+    .task-item.completed { opacity: 0.6; text-decoration: line-through; }
+    .task-info { flex: 1; display: flex; flex-direction: column; }
+    .task-name { font-weight: bold; font-size: 1.1rem; }
+    .task-meta { font-size: 0.85rem; color: #a1a1aa; }
+    .task-actions button { margin-left: 5px; padding: 5px 8px; border-radius: 5px; border: none; cursor: pointer; }
+    .task-actions button.complete { background: #16a34a; color: #fff; }
+    .task-actions button.delete { background: #dc2626; color: #fff; }
+    /* ===== Basic Reset ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
+/* ===== Body with Gradient + Background Elements ===== */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Subtle Floating Circles ===== */
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px; height: 200px;
+  background: #2563eb;
+  top: 10%; left: 5%;
+  animation-duration: 18s;
+}
+.circle:nth-child(2) {
+  width: 150px; height: 150px;
+  background: #facc15;
+  bottom: 20%; right: 10%;
+  animation-duration: 20s;
+}
+.circle:nth-child(3) {
+  width: 250px; height: 250px;
+  background: #ef4444;
+  top: 50%; left: 40%;
+  animation-duration: 22s;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  margin: 10px;
+}
+.navbar h2 { font-size: 1.5rem; color: #ffffff; }
+.navbar ul { display: flex; gap: 15px; list-style: none; }
+.navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px; }
+.navbar ul li a.active { background: #2563eb; }
+#toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+/* ===== Schedule Section ===== */
+.schedule { max-width: 900px; margin: 20px auto; padding: 20px; }
+.schedule h2 { margin-bottom: 15px; color: #facc15; }
+
+#calendar {
+  background: rgba(17, 24, 39, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.fc .fc-toolbar-title { color: #facc15; font-weight: bold; }
+.fc .fc-button { background-color: #2563eb; color: #fff; border: none; border-radius: 5px; }
+.fc .fc-button:hover { background-color: #1d4ed8; }
+.fc .fc-daygrid-event { border-radius: 5px; color: #fff; font-size: 0.85rem; padding: 3px 5px; }
+  </style>
+</head>
+<body>
+    <div class="background-elements">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <h2>📚 StudyMate</h2>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="tasks.html" class="active">Tasks</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="pomodoro.html">Pomodoro</a></li>
+      <li><a href="progress.html">Progress</a></li>
+    </ul>
+    <button id="toggleTheme">🌙</button>
+
+      <button id="logoutBtn" style="
+      background:#ef4444; 
+      color:#fff; 
+      border:none; 
+      padding:5px 10px; 
+      border-radius:5px; 
+      cursor:pointer;">
+      🚪 Logout
+    </button>
+  </nav>
+
+  <!-- Task Manager -->
+  <section class="task-page">
+    <h2>📝 Manage Your Tasks</h2>
+
+    <div class="task-form">
+      <input type="text" id="taskName" placeholder="Enter Task Name">
+      <input type="text" id="taskCategory" placeholder="Category (e.g. Math)">
+      <select id="taskPriority">
+        <option value="low">Low Priority</option>
+        <option value="medium">Medium Priority</option>
+        <option value="high">High Priority</option>
+      </select>
+      <input type="date" id="taskDate">
+      <button onclick="addTask()">➕ Add Task</button>
+    </div>
+
+    <div class="task-filters">
+      <input type="text" id="searchBox" placeholder="Search tasks..." onkeyup="searchTasks()">
+      <select id="filterCategory" onchange="filterTasks()">
+        <option value="all">All Categories</option>
+      </select>
+      <select id="filterPriority" onchange="filterTasks()">
+        <option value="all">All Priorities</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+
+    <div class="task-list" id="taskList"></div>
+  </section>
+
+  <script>
+    const currentUserEmail = localStorage.getItem("currentUser");
+    if(!currentUserEmail) {
+      alert("No user logged in! Redirecting to login page.");
+      window.location.href = "login.html";
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let currentUser = users.find(u => u.email === currentUserEmail);
+    if(!currentUser.tasks) currentUser.tasks = [];
+
+    let tasks = currentUser.tasks;
+
+    function saveUserData() {
+      currentUser.tasks = tasks;
+      users = users.map(u => u.email === currentUser.email ? currentUser : u);
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function updateCategoryFilter() {
+      const select = document.getElementById('filterCategory');
+      const categories = [...new Set(tasks.map(t => t.category))];
+      select.innerHTML = '<option value="all">All Categories</option>';
+      categories.forEach(cat => {
+        const opt = document.createElement('option');
+        opt.value = cat;
+        opt.textContent = cat;
+        select.appendChild(opt);
+      });
+    }
+
+    function renderTasks(list = tasks) {
+      const container = document.getElementById('taskList');
+      container.innerHTML = '';
+      list.forEach((task, index) => {
+        const div = document.createElement('div');
+        div.className = 'task-item' + (task.completed ? ' completed' : '');
+        div.innerHTML = `
+          <div class="task-info">
+            <span class="task-name">${task.name}</span>
+            <span class="task-meta">${task.category} | ${task.priority} | ${task.date}</span>
+          </div>
+          <div class="task-actions">
+            <button class="complete" onclick="toggleComplete(${index})">${task.completed ? 'Undo' : '✔'}</button>
+            <button class="delete" onclick="deleteTask(${index})">🗑</button>
+          </div>
+        `;
+        container.appendChild(div);
+      });
+      updateCategoryFilter();
+      saveUserData();
+    }
+
+    function addTask() {
+      const name = document.getElementById('taskName').value.trim();
+      const category = document.getElementById('taskCategory').value.trim() || 'General';
+      const priority = document.getElementById('taskPriority').value;
+      const date = document.getElementById('taskDate').value || 'No date';
+
+      if(!name) return alert('Please enter a task name');
+
+      tasks.push({ name, category, priority, date, completed: false });
+      document.getElementById('taskName').value = '';
+      document.getElementById('taskCategory').value = '';
+      document.getElementById('taskDate').value = '';
+      renderTasks();
+    }
+
+    function toggleComplete(index) {
+      tasks[index].completed = !tasks[index].completed;
+      renderTasks();
+    }
+
+    function deleteTask(index) {
+      if(confirm('Delete this task?')) {
+        tasks.splice(index, 1);
+        renderTasks();
+      }
+    }
+
+    function searchTasks() {
+      const query = document.getElementById('searchBox').value.toLowerCase();
+      const filtered = tasks.filter(t => t.name.toLowerCase().includes(query));
+      renderTasks(filtered);
+    }
+
+    function filterTasks() {
+      const category = document.getElementById('filterCategory').value;
+      const priority = document.getElementById('filterPriority').value;
+      let filtered = tasks;
+      if(category !== 'all') filtered = filtered.filter(t => t.category === category);
+      if(priority !== 'all') filtered = filtered.filter(t => t.priority === priority);
+      renderTasks(filtered);
+    }
+
+    function toggleTheme() {
+      if(document.body.style.background === 'white') {
+        document.body.style.background = '#1f2937';
+        document.body.style.color = '#fff';
+      } else {
+        document.body.style.background = 'white';
+        document.body.style.color = '#111';
+      }
+    }
+    document.getElementById('toggleTheme').addEventListener('click', toggleTheme);
+    // Logout function
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+  alert("You have been logged out!");
+  // Redirect to login page (replace with your login.html)
+  window.location.href = "login.html";
+});
+
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderTasks();
+    });
+  </script>
+</body>
+</html>

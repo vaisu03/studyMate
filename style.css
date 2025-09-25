@@ -1,0 +1,426 @@
+/* ===== General Reset ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===== Body ===== */
+body {
+  background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
+  color: #333;
+  transition: background 0.4s, color 0.4s;
+  min-height: 100vh;
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
+  padding: 15px 30px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar h2 {
+  font-size: 20px;
+  color: #4CAF50;
+}
+
+.navbar ul {
+  list-style: none;
+  display: flex;
+  gap: 20px;
+}
+
+.navbar ul li a {
+  text-decoration: none;
+  font-weight: 500;
+  color: #333;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: background 0.3s, color 0.3s;
+}
+
+.navbar ul li a:hover,
+.navbar ul li a.active {
+  background: #4CAF50;
+  color: white;
+}
+
+#toggleTheme {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #333;
+}
+
+/* ===== Dashboard Section ===== */
+.dashboard {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+/* Stats Cards */
+.stats-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.card {
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  margin-bottom: 10px;
+  color: #4CAF50;
+}
+
+/* Progress Bar */
+.progress-box {
+  background: rgba(255,255,255,0.85);
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 25px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+.progress {
+  height: 18px;
+  background: #eee;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #4CAF50, #81C784);
+  border-radius: 10px;
+  transition: width 0.6s;
+}
+
+/* Quote Box */
+.quote-box {
+  background: rgba(255,255,255,0.85);
+  padding: 20px;
+  border-radius: 15px;
+  text-align: center;
+  font-style: italic;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* ===== Dark Mode ===== */
+body.dark {
+  background: linear-gradient(135deg, #1a1a2e, #16213e);
+  color: #eee;
+}
+
+body.dark .navbar {
+  background: rgba(20,20,20,0.85);
+}
+
+body.dark .navbar h2 {
+  color: #81C784;
+}
+
+body.dark .navbar ul li a {
+  color: #eee;
+}
+
+body.dark .navbar ul li a:hover,
+body.dark .navbar ul li a.active {
+  background: #81C784;
+  color: #1a1a2e;
+}
+
+body.dark .card,
+body.dark .progress-box,
+body.dark .quote-box {
+  background: rgba(30,30,30,0.9);
+  color: #eee;
+}
+/* ===== Task Page ===== */
+.task-page {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.task-form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-form input, .task-form select, .task-form button {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.task-form button {
+  background: #4CAF50;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.task-form button:hover { background: #45a049; }
+
+.task-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.task-filters input, .task-filters select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+
+/* Sticky Note Style Cards */
+.task {
+  background: #fff9c4;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 12px;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.15);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: grab;
+  transition: transform 0.2s;
+}
+.task:hover { transform: scale(1.02); }
+
+.task span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.task .actions button {
+  margin-left: 5px;
+  padding: 6px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  color: white;
+}
+button.done { background: #2196F3; }
+button.delete { background: #f44336; }
+
+.completed { text-decoration: line-through; color: gray; }
+
+/* Priority Colors */
+.task.low { border-left: 6px solid #81C784; }
+.task.medium { border-left: 6px solid #FFB74D; }
+.task.high { border-left: 6px solid #E57373; }
+
+/* ===== Schedule Page ===== */
+.schedule {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.schedule h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #4CAF50;
+}
+
+/* Form */
+.schedule-form {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.schedule-form input, .schedule-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.schedule-form input {
+  background: #fff;
+  flex: 1;
+}
+
+.schedule-form button {
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.schedule-form button:hover {
+  background: #388E3C;
+}
+
+/* Calendar Grid */
+#calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin-top: 20px;
+}
+
+.day {
+  background: rgba(255,255,255,0.85);
+  padding: 15px;
+  border-radius: 10px;
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s;
+}
+
+.day:hover {
+  transform: translateY(-4px);
+}
+
+.day.today {
+  border: 2px solid #4CAF50;
+}
+
+.day h4 {
+  margin-bottom: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #4CAF50;
+}
+
+.task {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 6px;
+  border-radius: 6px;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+/* ===== Progress Page ===== */
+.progress-section {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.progress-section h2 {
+  margin-bottom: 25px;
+  color: #4CAF50;
+}
+
+.charts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.chart-box {
+  background: rgba(255,255,255,0.85);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+}
+
+/* Study Hours Form */
+.hours-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.hours-form input, .hours-form button {
+  padding: 8px 10px;
+  border: none;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+.hours-form input {
+  background: #fff;
+  flex: 1;
+}
+
+.hours-form button {
+  background: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.hours-form button:hover {
+  background: #388E3C;
+}
+
+
+/* Study Session Controls */
+.hours-form {
+  display: flex;
+  gap: 10px;
+  margin-top: 15px;
+  justify-content: center;
+}
+
+.hours-form button {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  color: white;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.hours-form button:hover {
+  background: #388E3C;
+}
+
+#sessionStatus {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+}
+ /* Calendar Page */
+#calendar {
+  max-width: 1000px;
+  margin: 20px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}

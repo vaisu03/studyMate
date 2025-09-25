@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Planner - Pomodoro</title>
+
+  <style>
+    /* ===== Basic Reset ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #1f2937; color: #fff; min-height: 100vh; }
+
+    /* ===== Navbar ===== */
+    .navbar { background: #111827; padding: 10px 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; }
+    .navbar h2 { font-size: 1.5rem; color: #ffffff; }
+    .navbar ul { display: flex; gap: 10px; list-style: none; }
+    .navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px; }
+    .navbar ul li a.active { background: #2563eb; }
+    #toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+    /* ===== Pomodoro Section ===== */
+    .pomodoro { max-width: 600px; margin: 20px auto; padding: 10px; text-align: center; }
+    .pomodoro h2 { margin-bottom: 20px; color: #facc15; }
+
+    .timer-display { font-size: 4rem; margin-bottom: 20px; color: #fbbf24; }
+    .controls button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; font-size: 1rem; }
+    .controls button.start { background: #2563eb; color: #fff; }
+    .controls button.pause { background: #f59e0b; color: #fff; }
+    .controls button.reset { background: #ef4444; color: #fff; }
+
+    .settings { margin-top: 20px; display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .settings input { width: 80px; padding: 5px; border-radius: 5px; border: none; text-align: center; }
+    .settings label { color: #fff; }
+    /* ===== Basic Reset ===== */
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+
+/* ===== Body with Gradient + Background Elements ===== */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Subtle Floating Circles ===== */
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px; height: 200px;
+  background: #2563eb;
+  top: 10%; left: 5%;
+  animation-duration: 18s;
+}
+.circle:nth-child(2) {
+  width: 150px; height: 150px;
+  background: #facc15;
+  bottom: 20%; right: 10%;
+  animation-duration: 20s;
+}
+.circle:nth-child(3) {
+  width: 250px; height: 250px;
+  background: #ef4444;
+  top: 50%; left: 40%;
+  animation-duration: 22s;
+}
+
+/* Floating Animation */
+@keyframes float {
+  0% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(180deg); }
+  100% { transform: translateY(0px) rotate(360deg); }
+}
+
+/* ===== Navbar ===== */
+.navbar {
+  background: rgba(17, 24, 39, 0.85);
+  backdrop-filter: blur(10px);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-radius: 10px;
+  margin: 10px;
+}
+.navbar h2 { font-size: 1.5rem; color: #ffffff; }
+.navbar ul { display: flex; gap: 15px; list-style: none; }
+.navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; border-radius: 5px; }
+.navbar ul li a.active { background: #2563eb; }
+#toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+/* ===== Schedule Section ===== */
+.schedule { max-width: 900px; margin: 20px auto; padding: 20px; }
+.schedule h2 { margin-bottom: 15px; color: #facc15; }
+
+#calendar {
+  background: rgba(17, 24, 39, 0.9);
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.fc .fc-toolbar-title { color: #facc15; font-weight: bold; }
+.fc .fc-button { background-color: #2563eb; color: #fff; border: none; border-radius: 5px; }
+.fc .fc-button:hover { background-color: #1d4ed8; }
+.fc .fc-daygrid-event { border-radius: 5px; color: #fff; font-size: 0.85rem; padding: 3px 5px; }
+  </style>
+</head>
+<body>
+    <div class="background-elements">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+  <!-- ===== Navbar ===== -->
+  <nav class="navbar">
+    <h2>📚 StudyMate</h2>
+    <ul>
+      <li><a href="dashboard.html">Dashboard</a></li>
+      <li><a href="tasks.html">Tasks</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="pomodoro.html" class="active">Pomodoro</a></li>
+      <li><a href="progress.html">Progress</a></li>
+    </ul>
+    <button id="toggleTheme">🌙</button>
+        <button id="logoutBtn" style="
+      background:#ef4444; 
+      color:#fff; 
+      border:none; 
+      padding:5px 10px; 
+      border-radius:5px; 
+      cursor:pointer;">
+      🚪 Logout
+    </button>
+  </nav>
+
+  <!-- ===== Pomodoro Section ===== -->
+  <section class="pomodoro">
+    <h2>🍅 Pomodoro Timer</h2>
+
+    <div class="timer-display" id="timer">25:00</div>
+
+    <div class="controls">
+      <button class="start" onclick="startTimer()">Start</button>
+      <button class="pause" onclick="pauseTimer()">Pause</button>
+      <button class="reset" onclick="resetTimer()">Reset</button>
+    </div>
+
+    <div class="settings">
+      <div>
+        <label>Work (min)</label><br>
+        <input type="number" id="workTime" value="25" min="1">
+      </div>
+      <div>
+        <label>Break (min)</label><br>
+        <input type="number" id="breakTime" value="5" min="1">
+      </div>
+    </div>
+  </section>
+
+  <script>
+    let workMinutes = 25;
+    let breakMinutes = 5;
+    let timeLeft = workMinutes * 60;
+    let timerInterval;
+    let isBreak = false;
+
+    const timerDisplay = document.getElementById("timer");
+
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60).toString().padStart(2, "0");
+      const seconds = (timeLeft % 60).toString().padStart(2, "0");
+      timerDisplay.textContent = `${minutes}:${seconds}`;
+    }
+
+    function startTimer() {
+      clearInterval(timerInterval);
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        if (timeLeft < 0) {
+          isBreak = !isBreak;
+          alert(isBreak ? "⏱️ Break Time!" : "💪 Back to Work!");
+          timeLeft = (isBreak ? breakMinutes : workMinutes) * 60;
+        }
+        updateDisplay();
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+      clearInterval(timerInterval);
+      timeLeft = workMinutes * 60;
+      isBreak = false;
+      updateDisplay();
+    }
+
+    // Update timer values based on input fields
+    document.getElementById("workTime").addEventListener("change", (e) => {
+      workMinutes = parseInt(e.target.value) || 25;
+      if (!isBreak) timeLeft = workMinutes * 60;
+      updateDisplay();
+    });
+
+    document.getElementById("breakTime").addEventListener("change", (e) => {
+      breakMinutes = parseInt(e.target.value) || 5;
+      if (isBreak) timeLeft = breakMinutes * 60;
+      updateDisplay();
+    });
+
+// Theme toggle
+function toggleTheme() {
+  if (document.body.style.background === "white") {
+    document.body.style.background = "#1f2937";
+    document.body.style.color = "#fff";
+  } else {
+    document.body.style.background = "white";
+    document.body.style.color = "#111";
+  }
+}
+
+// Logout function
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+  alert("You have been logged out!");
+  // Redirect to login page (replace with your login.html)
+  window.location.href = "login.html";
+});
+
+
+document.getElementById("toggleTheme").addEventListener("click", toggleTheme);
+
+// Initial display
+updateDisplay();
+
+  </script>
+</body>
+</html>

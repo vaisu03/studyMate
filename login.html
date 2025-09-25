@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - StudyMate</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #1f2937; color: #fff; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .form-container { background: #111827; padding: 30px; border-radius: 10px; width: 350px; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+    h2 { text-align: center; margin-bottom: 20px; color: #facc15; }
+    input { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: none; }
+    button { width: 100%; padding: 10px; background: #2563eb; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #1d4ed8; }
+    p { text-align: center; margin-top: 10px; }
+    a { color: #2563eb; text-decoration: none; }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Login</h2>
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+    <button onclick="loginUser()">Login</button>
+    <p>Don't have an account? <a href="register.html">Register</a></p>
+  </div>
+
+  <script>
+    function loginUser() {
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value.trim();
+
+      let users = JSON.parse(localStorage.getItem("users")) || [];
+      const user = users.find(u => u.email === email && u.password === password);
+
+      if(user) {
+        localStorage.setItem("currentUser", email);
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Invalid email or password!");
+      }
+    }
+  </script>
+</body>
+</html>

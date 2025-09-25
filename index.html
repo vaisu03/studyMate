@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Study Planner - Slideshow</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+    body { background: #111827; color: #fff; overflow: hidden; }
+
+    /* Slides container */
+    .slides {
+      display: flex;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    /* Slide */
+    .slide {
+      flex: 0 0 100vw;
+      height: 100vh;
+      position: relative;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.4); /* optional dark overlay */
+      z-index: 1;
+    }
+
+    .slide-content {
+      position: relative;
+      z-index: 2;
+      max-width: 750px;
+      text-align: center;
+      color: white;
+    }
+
+    h1, h2 { color: #facc15; margin-bottom: 15px; }
+    h1 { font-size: 3rem; }
+    h2 { font-size: 2.2rem; }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 25px;
+      line-height: 1.6;
+      color: #e5e7eb;
+    }
+
+    /* Buttons */
+    .btn {
+      background: #2563eb;
+      color: #fff;
+      padding: 12px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      margin: 8px;
+      display: inline-block;
+    }
+    .btn:hover {
+      background: #1d4ed8;
+      transform: scale(1.05);
+    }
+
+    /* Slide footer */
+    .slide-footer {
+      position: absolute;
+      bottom: 15px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #9ca3af;
+      z-index: 2;
+    }
+
+    /* Navigation arrows */
+    .arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      background: rgba(0,0,0,0.5);
+      border-radius: 50%;
+      padding: 12px;
+      cursor: pointer;
+      z-index: 3;
+      color: white;
+      transition: 0.3s;
+    }
+    .arrow:hover {
+      background: rgba(250, 204, 21, 0.9);
+      color: #111827;
+    }
+    .arrow.left { left: 20px; }
+    .arrow.right { right: 20px; }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    #handNext:hover { color:#fff; transform: scale(1.2); }
+  </style>
+</head>
+<body>
+  <div class="slides" id="slides">
+
+    <!-- Slide 1 -->
+    <div class="slide" style="background-image: url('images/stat.jfif');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h1>📚 Welcome to Smart Study Planner</h1>
+        <p>Stay organized, track your progress, and achieve your study goals with ease.</p>
+        <div style="display: flex; align-items: center; justify-content: center; gap: 15px;">
+          <a href="#" class="btn" id="exploreBtn">Explore Features</a>
+        </div>
+      </div>
+      <div class="slide-footer">© 2025 Smart Study Planner</div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="slide" style="background-image: url('images/plan2.jfif');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h2>📝 Plan & Manage Tasks</h2>
+        <p>Create, organize, and track your daily study tasks with reminders and priorities.</p>
+        <a href="register.html" class="btn">Login</a>
+        <a href="register.html" class="btn">Sign Up</a>
+      </div>
+      <div class="slide-footer">Tip: Use reminders to stay on track.</div>
+      <div class="arrow left" onclick="goToSlide(currentSlide-1)"><i class="fas fa-chevron-left"></i></div>
+      <div class="arrow right" onclick="goToSlide(currentSlide+1)"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide" style="background-image: url('images/sched.jfif');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h2>📅 Smart Scheduling</h2>
+        <p>Drag & drop tasks in your weekly calendar and balance your workload effectively.</p>
+        <a href="register.html" class="btn">Start Scheduling</a>
+      </div>
+      <div class="slide-footer">Your schedule, simplified.</div>
+      <div class="arrow left" onclick="goToSlide(currentSlide-1)"><i class="fas fa-chevron-left"></i></div>
+      <div class="arrow right" onclick="goToSlide(currentSlide+1)"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide" style="background-image: url('images/time.jfif');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h2>⏳ Pomodoro Timer</h2>
+        <p>Boost productivity with focused study sessions and automatic breaks.</p>
+        <a href="register.html" class="btn">Boost Productivity</a>
+      </div>
+      <div class="slide-footer">Stay focused, stay sharp.</div>
+      <div class="arrow left" onclick="goToSlide(currentSlide-1)"><i class="fas fa-chevron-left"></i></div>
+      <div class="arrow right" onclick="goToSlide(currentSlide+1)"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <!-- Slide 5 -->
+    <div class="slide" style="background-image: url('images/progress.jfif');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h2>📊 Progress Tracking</h2>
+        <p>Visualize your study hours with charts, monitor consistency, and stay motivated.</p>
+        <a href="register.html" class="btn">Track Progress</a>
+      </div>
+      <div class="slide-footer">Motivation grows with progress.</div>
+      <div class="arrow left" onclick="goToSlide(currentSlide-1)"><i class="fas fa-chevron-left"></i></div>
+      <div class="arrow right" onclick="goToSlide(currentSlide+1)"><i class="fas fa-chevron-right"></i></div>
+    </div>
+
+    <!-- Slide 6 -->
+    <div class="slide" style="background-image: url('images/start.jfif');">
+      <div class="overlay"></div>
+      <div class="slide-content">
+        <h2>🚀 Get Started Today</h2>
+        <p>Join Smart Study Planner to unlock your full learning potential.</p>
+        <a href="register.html" class="btn">Login</a>
+        <a href="register.html" class="btn">Register</a>
+      </div>
+      <div class="slide-footer">Your journey starts here ✨</div>
+      <div class="arrow left" onclick="goToSlide(currentSlide-1)"><i class="fas fa-chevron-left"></i></div>
+    </div>
+
+  </div>
+
+  <script>
+    const slides = document.getElementById("slides");
+    const totalSlides = slides.querySelectorAll(".slide").length;
+    let currentSlide = 0;
+
+    function goToSlide(index) {
+      if (index < 0) index = 0;
+      if (index >= totalSlides) index = totalSlides - 1;
+      currentSlide = index;
+      slides.scrollTo({
+        left: window.innerWidth * currentSlide,
+        behavior: "smooth"
+      });
+    }
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === "Enter") goToSlide(currentSlide + 1);
+      if (e.key === "ArrowLeft") goToSlide(currentSlide - 1);
+    });
+
+    // Mouse scroll horizontal
+    slides.addEventListener("wheel", (e) => {
+      if (e.deltaY > 0) goToSlide(currentSlide + 1);
+      else if (e.deltaY < 0) goToSlide(currentSlide - 1);
+    });
+
+    // Explore button goes to next slide
+    const exploreBtn = document.getElementById("exploreBtn");
+    exploreBtn.addEventListener("click", e => {
+      e.preventDefault();
+      goToSlide(currentSlide + 1);
+    });
+  </script>
+</body>
+</html>

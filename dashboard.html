@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smart Study Planner - Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <style>
+    /* ===== Basic Reset ===== */
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background: #1f2937; color: #fff; min-height: 100vh; }
+
+    /* ===== Navbar ===== */
+    .navbar { display: flex; justify-content: space-between; align-items: center; padding: 10px 20px; background: #111827; }
+    .navbar h2 { font-size: 1.5rem; }
+    .navbar h6 { font-size: .8rem;  }
+    .navbar ul { list-style: none; display: flex; gap: 15px; }
+    .navbar ul li a { color: #fff; text-decoration: none; padding: 5px 10px; }
+    .navbar ul li a.active { background: #2563eb; border-radius: 5px; }
+    #toggleTheme { background: none; border: none; color: #fff; font-size: 1.2rem; cursor: pointer; }
+
+    /* ===== Dashboard Section ===== */
+    .dashboard { padding: 20px; max-width: 900px; margin: auto; }
+    .stats-cards { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+    .card { flex: 1; min-width: 150px; background: #111827; padding: 15px; border-radius: 8px; text-align: center; box-shadow: 0 0 10px rgba(0,0,0,0.5); }
+    .card h3 { margin-bottom: 10px; color: #a5b4fc; }
+    .card p { font-size: 1.5rem; }
+
+    /* ===== Progress Bar ===== */
+    .progress-box { margin-bottom: 20px; }
+    .progress { width: 100%; height: 20px; background: #374151; border-radius: 10px; overflow: hidden; }
+    .progress-bar { height: 100%; width: 0; background: #4f46e5; transition: width 0.3s ease; }
+
+    /* ===== Quote ===== */
+    .quote-box { background: #111827; padding: 15px; border-radius: 8px; text-align: center; }
+    .quote-box h3 { margin-bottom: 10px; color: #facc15; }
+    .quote-box p { font-size: 1rem; margin-bottom: 10px; }
+    .quote-box button { padding: 5px 10px; border: none; border-radius: 5px; background: #2563eb; color: #fff; cursor: pointer; }
+  /* ===== Body with Gradient + Background Elements ===== */
+body {
+  position: relative;
+  background: linear-gradient(135deg, #1f2937, #111827);
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ===== Subtle Floating Circles ===== */
+.background-elements {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.circle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.1;
+  animation: float 15s infinite ease-in-out;
+}
+
+.circle:nth-child(1) {
+  width: 200px; height: 200px;
+  background: #2563eb;
+  top: 10%; left: 5%;
+  animation-duration: 18s;
+}
+.circle:nth-child(2) {
+  width: 150px; height: 150px;
+  background: #facc15;
+  bottom: 20%; right: 10%;
+  animation-duration: 20s;
+}
+.circle:nth-child(3) {
+  width: 250px; height: 250px;
+  background: #ef4444;
+  top: 50%; left: 40%;
+  animation-duration: 22s;
+}
+
+  </style>
+</head>
+<body>
+    <div class="background-elements">
+  <div class="circle"></div>
+  <div class="circle"></div>
+  <div class="circle"></div>
+</div>
+  <!-- Navigation -->
+  <nav class="navbar">
+    <h2>📚 StudyMate</h2>
+    <ul>
+      <li><a href="#" class="active">Dashboard</a></li>
+      <li><a href="tasks.html">Tasks</a></li>
+      <li><a href="schedule.html">Schedule</a></li>
+      <li><a href="pomodoro.html">Pomodoro</a></li>
+      <li><a href="progress.html">Progress</a></li>
+    </ul>
+    <button id="toggleTheme">🌙</button>
+      <button id="logoutBtn" style="
+      background:#ef4444; 
+      color:#fff; 
+      border:none; 
+      padding:5px 10px; 
+      border-radius:5px; 
+      cursor:pointer;">
+      🚪 Logout
+    </button>
+  </nav>
+
+  <!-- Dashboard Content -->
+  <section class="dashboard">
+    <!-- Stats -->
+    <div class="stats-cards">
+      <div class="card">
+        <h3>Total Tasks</h3>
+        <p id="totalCount">0</p>
+      </div>
+      <div class="card">
+        <h3>Completed</h3>
+        <p id="completedCount">0</p>
+      </div>
+      <div class="card">
+        <h3>Pending</h3>
+        <p id="pendingCount">0</p>
+      </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div class="progress-box">
+      <p>Progress</p>
+      <div class="progress">
+        <div class="progress-bar" id="progressBarFill"></div>
+      </div>
+    </div>
+
+    <!-- Motivational Quote -->
+    <div class="quote-box">
+      <h3>💡 Daily Motivation</h3>
+      <p id="quoteBox">Loading...</p>
+      <button id="newQuote">New Quote</button>
+    </div>
+  </section>
+
+  <!-- ===== JS ===== -->
+  <script>
+    const QUOTES = [
+      "Don't watch the clock; do what it does. Keep going.",
+      "Success is the sum of small efforts, repeated day in and day out.",
+      "The expert in anything was once a beginner.",
+      "Start where you are. Use what you have. Do what you can.",
+      "Little by little, one travels far."
+    ];
+
+    const currentUserEmail = localStorage.getItem("currentUser");
+    if(!currentUserEmail) {
+      alert("No user logged in! Redirecting to login page.");
+      window.location.href = "login.html";
+    }
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    let currentUser = users.find(u => u.email === currentUserEmail);
+    let tasks = currentUser.tasks || []; // ONLY tasks user added on Tasks page
+
+    function saveUserData() {
+      currentUser.tasks = tasks;
+      currentUser.progress = tasks.filter(t => t.completed).length;
+      users = users.map(u => u.email === currentUser.email ? currentUser : u);
+      localStorage.setItem("users", JSON.stringify(users));
+    }
+
+    function updateDashboard() {
+      const total = tasks.length;
+      const completed = tasks.filter(t => t.completed).length;
+      const pending = total - completed;
+
+      document.getElementById("totalCount").innerText = total;
+      document.getElementById("completedCount").innerText = completed;
+      document.getElementById("pendingCount").innerText = pending;
+
+      const progressPct = total ? Math.round((completed / total) * 100) : 0;
+      document.getElementById("progressBarFill").style.width = progressPct + "%";
+
+      saveUserData(); // persist data automatically
+    }
+
+    function showQuote() {
+      const box = document.getElementById("quoteBox");
+      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      box.innerText = q;
+    }
+
+    function toggleTheme() {
+      if(document.body.style.background === "white") {
+        document.body.style.background = "#1f2937";
+        document.body.style.color = "#fff";
+      } else {
+        document.body.style.background = "white";
+        document.body.style.color = "#111";
+      }
+    }
+
+    document.getElementById("toggleTheme").addEventListener("click", toggleTheme);
+    document.getElementById("newQuote").addEventListener("click", showQuote);
+
+    // Logout function
+document.getElementById("logoutBtn").addEventListener("click", () => {
+
+  alert("You have been logged out!");
+  // Redirect to login page (replace with your login.html)
+  window.location.href = "login.html";
+});
+
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateDashboard();
+      showQuote();
+    });
+  </script>
+</body>
+</html>
