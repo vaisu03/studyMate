@@ -56,7 +56,3 @@ Easily host the project using GitHub Pages or Netlify for free.
 GitHub Pages: Push your code → Go to repo settings → Enable Pages.
 
 Netlify: Drag & drop your project folder to deploy instantly.
----
-## 🤝 Contributing
-
-Contributions are welcome! If you’d like to enhance the project, feel free to fork the repo and submit a pull request.
