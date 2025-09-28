@@ -1,4 +1,6 @@
-# 📚 Smart Study Planner  
+# 📚 Smart Study Planner 
+
+🔗 **Live Demo:** [View on Netlify](https://studymatestudyplanner.netlify.app/)  
 
 The **Smart Study Planner** is a lightweight, interactive, and user-friendly web application designed to help students organize their study schedules, track progress, and stay motivated. Unlike traditional planners or complex productivity apps, this project provides a simple yet effective way to plan, manage, and visualize study tasks.  
 
